@@ -52,15 +52,67 @@ Together, these tools allow the app to collect input, call AI models, display re
 
 ## Project Structure
 
-The repository is organized as follows:
+- **`app.py`**: 
+  - It handles the overall flow of the hiring assistant chatbot, including:
+    - contains the Streamlit-based user interface.
+    - Displaying the initial greeting and instructions.
+    - Collecting candidate information (e.g., name, email, tech stack).
+    - Triggering the generation of technical questions based on the candidate's tech stack.
+    - Collecting and storing candidate answers.
+    - Analyzing sentiment of candidate responses.
+    - Displaying a summary of the conversation and providing a PDF download option for the assessment.
+  - The script integrates with other modules (e.g., `chains.py`, `state.py`) to manage the conversation state and generate dynamic content.
 
-* **`app.py`** – The main Streamlit application script. This file defines the user interface (forms, text areas, buttons) and controls the overall logic. It loads candidate details, triggers question generation, collects answers, invokes sentiment analysis, and displays the summary and PDF download button.
-* **`chains.py`** – This module contains the LangChain pipeline definitions (prompt templates, LLMChain objects, etc.). For example, it might define how to prompt the Qwen model to generate questions or how to summarize answers. Separating these chains keeps the prompt engineering and model calls organized.
-* **Other modules (if any)** – Depending on the code, there may be additional Python files (e.g. `prompts.py` for prompt strings, `utils.py` for helper functions, `pdf_generator.py` for PDF logic). Each would encapsulate a part of the functionality. The instructions for this assignment only explicitly mention `app.py` and `chains.py`, so those are the core components.
-* **`requirements.txt`** – Lists all the Python dependencies (Streamlit, LangChain, Transformers, torch, ReportLab, etc.). This file allows easy installation of the needed packages. (See below for the exact contents.)
-* **`README.md`** – This documentation file (you’re reading it now) explains the project, its usage, and setup.
+- **`chains.py`**:
+  - This module defines the LangChain pipelines used for various tasks in the chatbot.
+  - It includes:
+    - Prompt templates for different stages of the conversation (e.g., information gathering, technical question generation, closing remarks).
+    - Chains that combine these prompts with the language model (LLM) to generate responses.
+    - Specific chains for handling query relevance and question revision during the technical interview phase.
+  - By separating the prompt engineering and model interactions, this file keeps the logic clean and reusable.
 
-Each file is documented with comments to explain its role. Together, they implement the interview-assistant pipeline end-to-end.
+- **`model.py`**:
+  - Responsible for loading and configuring the transformer models used in the project.
+  - It sets up pipelines for:
+    - Information gathering (using a lower temperature for more predictable responses).
+    - Question generation (with higher creativity to produce varied technical questions).
+    - Sentiment analysis (using a pre-trained model for analyzing candidate responses).
+  - This modular approach ensures that model configurations are centralized and easy to update.
+
+- **`prompts.py`**:
+  - Contains all the prompt templates used in the chatbot.
+  - These templates are designed to guide the language model in:
+    - Collecting candidate information.
+    - Generating technical questions tailored to the candidate's tech stack and experience.
+    - Handling candidate queries and revising questions when necessary.
+    - Providing closing remarks and summarizing the conversation.
+  - Each prompt is carefully crafted to ensure clarity, relevance, and alignment with the chatbot's objectives.
+
+- **`state.py`**:
+  - Manages the state of the conversation using the `HiringState` class.
+  - Tracks:
+    - The current stage of the conversation (e.g., greeting, info gathering, technical interview).
+    - Candidate data (e.g., name, email, tech stack).
+    - Generated technical questions and candidate answers.
+    - Conversation history and logs.
+  - This class ensures that the chatbot maintains context throughout the interaction, providing a seamless experience for the candidate.
+
+- **`utils.py`**:
+  - Contains utility functions that support various operations in the chatbot, including:
+    - Cleaning and formatting model responses.
+    - Extracting questions from generated text.
+    - Formatting the tech stack input.
+    - Analyzing sentiment of candidate responses.
+    - Generating a PDF of the technical assessment.
+  - These helper functions keep the main logic in `app.py` and other modules clean and focused.
+
+- **`conversation.py`**:
+  - Handles the core conversation logic, including:
+    - Managing the flow between different stages of the conversation.
+    - Generating technical questions based on candidate data.
+    - Processing candidate responses and queries.
+    - Logging interactions and updating the conversation state.
+  - This module acts as the brain of the chatbot, ensuring that the interaction is coherent and purposeful.
 
 ## Installation
 
@@ -90,10 +142,8 @@ To run the TalentScout Hiring Assistant locally, follow these steps:
    This will open the application in your web browser (usually at `http://localhost:8501`). The Streamlit server is lightweight and should start up quickly.
 6. **Use the app:** In the browser, fill out the candidate form and proceed through the chatbot interaction as described above. You do not need any API keys since the models run locally.
 
-That’s it! The README and code are designed for a newcomer to get started easily. If you run into dependency issues, ensure that your `torch` version is compatible with your hardware (CPU-only vs. GPU).
-
 ## Demo Link
 
-*A live demo of this app will be provided here once deployed.* (For now, follow the Installation instructions to try it locally.)
+*Video Link - https://www.loom.com/share/c47ff9e833ec45bb88b7c82572fbfa1b?sid=39e98c63-bce2-4ee9-ae44-980595d313e4
 
 
