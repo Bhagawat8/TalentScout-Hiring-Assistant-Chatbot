@@ -1,0 +1,10 @@
+streamlit
+langchain
+transformers
+torch
+reportlab
+langchain-community
+accelerate 
+sentencepiece 
+bitsandbytes
+einops
